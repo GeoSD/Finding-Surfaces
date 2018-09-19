@@ -68,10 +68,34 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         return node
     }
     
+    func createTree(planeAnchor: ARPlaneAnchor) -> SCNNode {
+        let treeNode = SCNNode()
+        treeNode.position = SCNVector3(0, 0.25, 0)
+        
+        let trunk = SCNCylinder(radius: 0.05, height: 0.5)
+        trunk.firstMaterial?.diffuse.contents = #colorLiteral(red: 0.3098039329, green: 0.2039215714, blue: 0.03921568766, alpha: 1)
+        treeNode.geometry = trunk
+        
+        let crownNode = SCNNode()
+        crownNode.position = SCNVector3(0, 0.5, 0)
+        
+        let crown = SCNSphere(radius: 0.25)
+        crown.firstMaterial?.diffuse.contents = #colorLiteral(red: 0.9529411793, green: 0.6862745285, blue: 0.1333333403, alpha: 1)
+        crownNode.geometry = crown
+        
+        let node = SCNNode()
+        node.addChildNode(treeNode)
+        node.addChildNode(crownNode)
+        
+        return node
+    }
+    
     func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
         guard let planeAnchor = anchor as? ARPlaneAnchor else { return }
         let floor = createFloor(planeAnchor: planeAnchor)
+        let tree = createTree(planeAnchor: planeAnchor)
         node.addChildNode(floor)
+        node.addChildNode(tree)
     }
     
     func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
